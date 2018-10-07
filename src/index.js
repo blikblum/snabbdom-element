@@ -38,7 +38,7 @@ export function initElementClass (modules) {
     }
 
     disconnectedCallback () {
-      // todo: call inherited disconnectedCallback when new version is published
+      super.disconnectedCallback()
       const emptyVTree = vnode(this.localName, {}, [], undefined, this.renderRoot)
       patch(this._vTree, emptyVTree)
     }
