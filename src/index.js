@@ -1,6 +1,7 @@
-import { UpdatingElement } from '@polymer/lit-element/lib/updating-element'
 import { init } from 'snabbdom'
 import vnode from 'snabbdom/vnode'
+import { UpdatingElement } from '@polymer/lit-element/lib/updating-element.js'
+export * from '@polymer/lit-element/lib/decorators.js'
 
 export function initElementClass (modules) {
   const patch = init(modules)
