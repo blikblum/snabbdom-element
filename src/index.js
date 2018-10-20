@@ -8,34 +8,30 @@ export function initElementClass (modules) {
   return class SnabbdomElement extends UpdatingElement {
     /**
     * Updates the element. This method reflects property values to attributes
-    * and calls `render` to render DOM via lit-html. Setting properties inside
+    * and calls `render` to render DOM via snabbdom. Setting properties inside
     * this method will *not* trigger another update.
     * * @param _changedProperties Map of changed properties with old values
     */
     update (changedProperties) {
       super.update(changedProperties)
-      if (typeof this.render === 'function') {
-        let newVTree = this.render()
-        newVTree = vnode(
-          this.localName,
-          {},
-          Array.isArray(newVTree) ? newVTree : [newVTree],
-          undefined,
-          this.renderRoot
-        )
-        if (!this._vTree) {
-          // small cheat to allow rendering root el
-          // creates an empty vnode with the same sel as the rendered vtree
-          // this ensure the view element will be properly patched
-          const emptyVTree = vnode(this.localName, {}, [], undefined, this.renderRoot)
-          patch(emptyVTree, newVTree)
-        } else {
-          patch(this._vTree, newVTree)
-        }
-        this._vTree = newVTree
+      let newVTree = this.render()
+      newVTree = vnode(
+        this.localName,
+        {},
+        Array.isArray(newVTree) ? newVTree : [newVTree],
+        undefined,
+        this.renderRoot
+      )
+      if (!this._vTree) {
+        // small cheat to allow rendering root el
+        // creates an empty vnode with the same sel as the rendered vtree
+        // this ensure the view element will be properly patched
+        const emptyVTree = vnode(this.localName, {}, [], undefined, this.renderRoot)
+        patch(emptyVTree, newVTree)
       } else {
-        throw new Error('render() not implemented')
+        patch(this._vTree, newVTree)
       }
+      this._vTree = newVTree
     }
 
     disconnectedCallback () {
@@ -43,5 +39,13 @@ export function initElementClass (modules) {
       const emptyVTree = vnode(this.localName, {}, [], undefined, this.renderRoot)
       patch(this._vTree, emptyVTree)
     }
+
+    /**
+     * Invoked on each update to perform rendering tasks. This method must return
+     * a snnabdom vnode. Setting properties inside this method will *not*
+     * trigger the element to update.
+     * @returns {vnode} Must return a snnabdom vnode.
+     */
+    render () { }
   }
 }
